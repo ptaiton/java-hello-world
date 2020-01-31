@@ -2,6 +2,12 @@ name: Build sample Java Maven project
  
 on: [push, pull_request]
  
+env:
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: java-hello-world-cluster
+  GKE_ZONE: us-west1-a
+  IMAGE: java-hello-world
+
 jobs:
   compile:
     runs-on: ubuntu-latest
@@ -58,11 +64,18 @@ jobs:
         mv artifact/java-hello-world-1.0-SNAPSHOT.jar java-hello-world/target
         ls
         docker build -t java-hello-world .
-    - name: Access secrets
-      env: 
-        SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
-      run: echo "Content of secret - $SUPER_SECRET"
-    - name: Push Docker images
-      run: echo "Pushing Docker image to Container Registry (e.g. ECR)"
-    - name: Deploy application
-      run: echo "Deploying application (e.g. Kubernetes)"
+    - name: Publish
+      run: |
+        docker push gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
+    - name: Set up Kustomize
+      run: |
+        curl -o kustomize --location https://github.com/kubernetes-sigs/kustomize/releases/download/v3.1.0/kustomize_3.1.0_linux_amd64
+        chmod u+x ./kustomize
+    - name: Deploy
+      run: |
+        gcloud container clusters get-credentials $GKE_CLUSTER \
+          --zone $GKE_ZONE --project $GKE_PROJECT
+        ./kustomize edit set image gcr.io/GKE_PROJECT/IMAGE:TAG=gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
+        ./kustomize build . | kubectl apply -f -
+        kubectl rollout status deployment/gke-test
+        kubectl get services -o wide
