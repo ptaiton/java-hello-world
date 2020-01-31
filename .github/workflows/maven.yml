@@ -36,15 +36,11 @@ jobs:
         java-version: 11
     - name: Build and test project
       run: mvn -f pom.xml clean verify
-    - name: Test
-      run: pwd
-    - name: Test2
-      run: ls
     - name: Upload Maven build artifact
       uses: actions/upload-artifact@v1
       with:
         name: artifact
-        path: target/java-hello-world.jar
+        path: target/java-hello-world-1.0-SNAPSHOT.jar
 
   deploy: 
     runs-on: ubuntu-latest  
