@@ -56,7 +56,8 @@ jobs:
       run: |
         mkdir -p java-hello-world/target
         mv artifact/java-hello-world-1.0-SNAPSHOT.jar java-hello-world/target
-        docker build -t de.rieckpil.blog/github-actions-sample java-hello-world
+        ls
+        docker build -t java-hello-world .
     - name: Access secrets
       env: 
         SUPER_SECRET: ${{ secrets.SUPER_SECRET }}
