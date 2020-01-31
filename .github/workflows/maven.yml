@@ -27,7 +27,7 @@ jobs:
     - name: Build Docker container
       run: |
         mkdir -p java-hello-world/target
-        mv artifact/java-hello-world.jar java-hello-world/target
+        mv artifact/java-hello-world-1.0-SNAPSHOT.jar java-hello-world/target
         docker build -t ptaiton/java-hello-world java-hello-world
     - name: Push Docker images
       run: echo "Pushing Docker image to Container Registry (e.g. ECR)"
