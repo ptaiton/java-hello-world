@@ -23,7 +23,7 @@ jobs:
     - name: Download Maven build artifact
       uses: actions/download-artifact@v1
       with:
-        name: artifact
+        name: java-hello-world-1.0-SNAPSHOT
     - name: Build Docker container
       run: |
         mkdir -p java-hello-world/target
