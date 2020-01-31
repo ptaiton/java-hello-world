@@ -55,10 +55,7 @@ jobs:
     - name: Build Docker container
       run: |
         mkdir -p java-hello-world/target
-        pwd
-        ls
-        ls artifact
-        mv artifact/java-hello-worl-1.0-SNAPSHOT.jar java-hello-world/target
+        mv artifact/java-hello-world-1.0-SNAPSHOT.jar java-hello-world/target
         docker build -t de.rieckpil.blog/github-actions-sample java-hello-world
     - name: Access secrets
       env: 
